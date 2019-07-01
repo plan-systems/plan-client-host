@@ -27,84 +27,16 @@ import (
 	//"github.com/plan-systems/plan-core/pdi"
 	"github.com/plan-systems/plan-core/plan"
 	"github.com/plan-systems/plan-core/repo"
-	"github.com/plan-systems/plan-core/tools"
+	"github.com/plan-systems/plan-core/tools/ctx"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 )
 
-/*
-type msgItem struct {
-	msg              *repo.Msg
-	entryBody        []byte
-	onCommitComplete OnCommitComplete
-}
-
-
-// MsgSess is characterized by having a list of msg IDs that are currently in progress and have associated responder callbacks.
-type MsgSess struct {
-	RepoSess        *RepoSess
-	chSessID        repo.ChSessID
-	responders      map[uint32]*msgItem
-	respondersMutex sync.Mutex
-	nextMsgID       uint32
-}
-
-func (resp *MsgSess) initResponder(rs *RepoSess) {
-	resp.responders = map[uint32]*msgItem{}
-	resp.RepoSess = rs
-	resp.nextMsgID = 1
-}
-
-func (resp *MsgSess) newMsg(op repo.MsgOp) *repo.Msg {
-
-	msg := &repo.Msg{
-		ID:       atomic.AddUint32(&resp.nextMsgID, 1),
-		Op:       op,
-		ChSessID: uint32(resp.chSessID),
-	}
-
-	return msg
-}*/
-
-
-
-/*
-type chSess struct {
-	MsgSess
-
-	ChID     plan.ChID
-	msgInbox chan *repo.Msg
-	isOpen   bool
-}
-
-
-
-func (cs *chSess) resetReader() {
-
-	msg := cs.newMsg(repo.MsgOp_RESET_ENTRY_READER)
-	msg.FLAGS |= uint32(1) << byte(repo.ChSessionFlags_INCLUDE_BODY)
-	msg.FLAGS |= uint32(1) << byte(repo.ChSessionFlags_CONTENT_ENTRIES)
-
-
-	cs.RepoSess.msgOutbox <- msg
-}
-
-func (cs *chSess) CloseSession() {
-	if cs.isOpen {
-		cs.isOpen = false
-		close(cs.msgInbox)
-		cs.RepoSess.msgOutbox <- &repo.Msg{
-			Op:       repo.MsgOp_CLOSE_CH_SESSION,
-			ChSessID: uint32(cs.chSessID),
-		}
-	}
-}*/
-
 
 // RepoSess is a member using this workstation.
 type RepoSess struct {
-	tools.Context
+	ctx.Context
 
 	ws              *WsSession
 	repoClient      repo.RepoClient
@@ -324,7 +256,7 @@ func (rs *RepoSess) OpenRepoSession() error {
 	rs.sessToken = msg.BUF0
 
 	// Since OpenRepoSession() uses a stream responder, the trailer is never set, so we use this guy as the sesh token.
-	rs.Ctx = tools.ApplyTokenOutgoingContext(rs.Ctx, rs.sessToken)
+	rs.Ctx = ctx.ApplyTokenOutgoingContext(rs.Ctx, rs.sessToken)
 
 	rs.msgOutlet, err = rs.repoClient.OpenMsgPipe(rs.Ctx)
 	if err != nil {

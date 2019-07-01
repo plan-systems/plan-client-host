@@ -33,6 +33,7 @@ import (
 	"github.com/plan-systems/plan-core/plan"
 	"github.com/plan-systems/plan-core/repo"
 	"github.com/plan-systems/plan-core/tools"
+	"github.com/plan-systems/plan-core/tools/ctx"
 
 	"google.golang.org/grpc"
 	//"google.golang.org/grpc/metadata"
@@ -57,7 +58,7 @@ const (
 // (c) A User has any number of communities (repos) seeded, meaning it has established an
 //	 account on a given pnode for a given community.
 type WsHost struct {
-	tools.Context
+	ctx.Context
 
 	BasePath   string
 	SeatsPath  string
@@ -316,7 +317,7 @@ type msgJob struct {
 
 // WsSession represents a user/member "logged in", meaning a SKI session is active.
 type WsSession struct {
-	tools.Context
+	ctx.Context
 
 	SessionToken	[]byte
 	SeatID		  	[]byte
