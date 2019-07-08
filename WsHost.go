@@ -420,6 +420,8 @@ func (sess *WsSession) ctxStartup() error {
 		return err
 	}
 
+	sess.CtxAddChild(sess.repoSess, nil)
+
 	//
 	//
 	// entry encryption
@@ -441,7 +443,7 @@ func (sess *WsSession) ctxStartup() error {
 				for i := 0; i < N; i++ {
 					msg.ITEMS[i] = txnSet.Segs[i].RawTxn
 				}
-				sess.repoSess.msgsToRepo <- msg
+				sess.repoSess.sendToRepo(msg)
 			}
 		}
 
@@ -502,6 +504,7 @@ func (sess *WsSession) ctxStopping() {
 
 	// With all the channel sessions stopped, we can safely close their outlet, causing a close-cascade.
 	if sess.msgsToClient != nil {
+		sess.Info(2, "closing WsSession.msgsToClient")
 		close(sess.msgsToClient)
 	}
 }
@@ -532,7 +535,7 @@ func (sess *WsSession) onMsgFromClient(msg *repo.Msg) {
     }
 
     if fwdToRepo {
-		sess.repoSess.msgsToRepo <- msg
+		sess.repoSess.sendToRepo(msg)
 	}
 }
 

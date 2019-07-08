@@ -41,6 +41,7 @@ type RepoSess struct {
 	ws              *WsSession
 	repoClient      repo.RepoClient
 	msgsToRepo      chan *repo.Msg
+	msgsToRepoOpen  bool
 	msgInlet        repo.Repo_OpenMemberSessionClient
 	msgOutlet       repo.Repo_OpenMsgPipeClient
 	sessToken       []byte
@@ -93,6 +94,7 @@ func (rs *RepoSess) ctxStartup() error {
     // repo writer/sender
     //
     rs.msgsToRepo = make(chan *repo.Msg, 4)
+	rs.msgsToRepoOpen = true
 	rs.CtxGo(func() {
 
 		for msg := range rs.msgsToRepo {
@@ -140,14 +142,15 @@ func (rs *RepoSess) ctxStartup() error {
 			return err
 		}
 
-		rs.msgsToRepo <- msg
+		rs.sendToRepo(msg)
 	}
 
 	return nil
 }
 
 func (rs *RepoSess) ctxStopping() {
-	if rs.msgsToRepo != nil {
+	if rs.msgsToRepoOpen {
+		rs.msgsToRepoOpen = false
 		close(rs.msgsToRepo)
 	}
 }
@@ -156,6 +159,12 @@ func (rs *RepoSess) putJob(inJob msgJob) {
 	rs.msgJobsMutex.Lock()
 	rs.msgJobs[key] = inJob
 	rs.msgJobsMutex.Unlock()
+}
+
+func (rs *RepoSess) sendToRepo(inMsg *repo.Msg) {
+	if rs.msgsToRepoOpen {
+		rs.msgsToRepo <- inMsg
+	}
 }
 
 func (rs *RepoSess) reattchBody(ioMsg *repo.Msg) bool {
