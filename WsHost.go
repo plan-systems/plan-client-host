@@ -165,7 +165,7 @@ func (ws *WsHost) ctxStartup() error {
 	//
 	if err == nil {
 		ws.grpcServer = grpc.NewServer()
-		client.RegisterWsServiceServer(ws.grpcServer, ws)		// TODO: secure only!
+		client.RegisterWsHostServer(ws.grpcServer, ws)		// TODO: secure only!
 		
 		err = ws.AttachGrpcServer(
 			"tcp",
@@ -274,7 +274,7 @@ func (ws *WsHost) CreateNewSeat(
 
 // OpenWsSession -- see service WsService
 func (ws *WsHost) OpenWsSession(
-	ioPipe client.WsService_OpenWsSessionServer, 
+	ioPipe client.WsHost_OpenWsSessionServer, 
 ) error {
 
 	msg, err := ioPipe.Recv()
@@ -329,7 +329,7 @@ type WsSession struct {
 	entriesToCommit chan *repo.Msg
 	MemberCrypto    pdi.MemberCrypto
 	msgOutbox	   	chan *repo.Msg
-	wsPipe		  	client.WsService_OpenWsSessionServer
+	wsPipe		  	client.WsHost_OpenWsSessionServer
 	login			*client.WsLogin
 	repoAddr		string
 	repoSess		*RepoSess
@@ -340,7 +340,7 @@ type WsSession struct {
 func (ws *WsHost) StartNewWsSession(
 	inSeatsPath string,
 	inLogin *client.WsLogin,
-	ioPipe client.WsService_OpenWsSessionServer, 
+	ioPipe client.WsHost_OpenWsSessionServer, 
 	inRepoAddr string,
 ) (*WsSession, error) {
 
