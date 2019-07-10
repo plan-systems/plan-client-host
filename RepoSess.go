@@ -124,7 +124,7 @@ func (rs *RepoSess) ctxStartup() error {
 					rs.CtxStop("RepoSess: " + ctxErr.Error(), nil)
 					break
 				} else {
-					rs.Warnf("RepoSess pipe Recv(): ", err)
+					rs.Warn("RepoSess pipe Recv(): ", err)
 				}
             }
         }

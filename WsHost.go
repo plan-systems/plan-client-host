@@ -466,7 +466,7 @@ func (sess *WsSession) ctxStartup() error {
 					sess.CtxStop("WsSession: " + ctxErr.Error(), nil)
 					break
 				} else {
-					sess.Warnf("WsSession pipe Recv(): ", err)
+					sess.Warn("WsSession pipe Recv(): ", err)
 				}
 			}
 		}
