@@ -11,8 +11,10 @@ P  L  A  N etwork
 
 ## About
 
-This repo is a reference implementation of the PLAN Data Model "repo" daemon.
-
+- This repo builds a daemon called `phost` that connects to a PLAN [pnode](https://github.com/plan-systems/plan-pnode).
+- PLAN clients such as [plan-client-unity](https://github.com/plan-systems/plan-client-unity) connect to `phost` and depend on it to manage user crypto and [Cloud File Interface](https://github.com/plan-systems/design-docs/blob/master/PLAN-API-Documentation.md#Cloud-File-Interface) modules such as [IPFS](https://ipfs.io/).
+- Although `phost` is presumed to run on the same machine as the hosted PLAN graphical client for security reasons, this is not a requirement.
+- See the PLAN Network Configuration Diagram to see how `phost` fits into PLAN.
 
 ## Building
 
