@@ -132,16 +132,22 @@ func (rs *RepoSess) ctxStartup() error {
 
 	// Send the community keyring!
 	{
-		msg := &repo.Msg{
-			Op: repo.MsgOp_ADD_COMMUNITY_KEYS,
-		}
 
 		// TODO: come up w/ better key idea
-		msg.BUF0, err = rs.ws.MemberCrypto.ExportCommunityKeyring(rs.sessToken)
+		keyTomeCrypt, err := rs.ws.MemberCrypto.ExportCommunityKeyring(rs.sessToken)
 		if err != nil {
 			return err
 		}
 
+		msg := &repo.Msg{
+			Op: repo.MsgOp_ADD_COMMUNITY_KEYS,
+		}
+
+		msg.BUF0, err = keyTomeCrypt.Marshal()
+		if err != nil {
+			return err
+		}
+		
 		rs.sendToRepo(msg)
 	}
 
