@@ -29,7 +29,7 @@ const localRepo = ":" + plan.DefaultRepoServicePort
 func main() {
 
 	init 		:= flag.Bool("init", 		false, 				"init creates <datadir> as a fresh/new pclient datastore")
-	dataDir 	:= flag.String("datadir", 	"~/_PLAN_pclient", 	"datadir specifies the path for all file access and storage")
+	dataDir 	:= flag.String("datadir", 	"~/_PLAN_phost", 	"datadir specifies the path for all file access and storage")
 	seed 		:= flag.String("seed", 		"", 				"seed reads a PLAN seed file ands seeds a community instance on the host pnode")
 	port    	:= flag.String("port",	    plan.DefaultWorkstationServicePort, "Sets the port used to bind the Repo service")
 	repoAddr 	:= flag.String("repoAddr",	localRepo, 			"host specifies the net addr of a host pnode for all connection")
