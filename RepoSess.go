@@ -66,7 +66,7 @@ func NewRepoSess(
 // Startup initiates connection to the repo
 func (rs *RepoSess) Startup() error {
 
-	rs.SetLogLabel(fmt.Sprint("RepoSess ", rs.ws.MemberSeat.GenesisSeed.CommunityEpoch.CommunityID[:4]))
+	rs.SetLogLabel(fmt.Sprint("RepoSess ", plan.BinEncode(rs.ws.MemberSeat.GenesisSeed.CommunityEpoch.CommunityID[:3])))
 
 	err := rs.CtxStart(
 		rs.ctxStartup,
