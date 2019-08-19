@@ -4,9 +4,7 @@ import (
 	"fmt"
 	"bytes"
 	"context"
-	//"flag"
 	"io/ioutil"
-	//"log"
 	"os"
 
 	//"time"
@@ -16,9 +14,8 @@ import (
 	//"fmt"
 
 	"path"
-	//"strconv"
-	//"sync"
-	//"sync/atomic"
+	"regexp"
+
 
     ds "github.com/plan-systems/plan-pdi-local/datastore"
 
@@ -77,17 +74,21 @@ type InstallInfo struct {
 func NewWsHost(
 	inBasePath string,
 	inDoInit bool,
-	inPort string,
+	inHostPort string,
 	inRepoAddr string,
 ) (*WsHost, error) {
 
 	ws := &WsHost{
-		grpcPort: inPort,
+		grpcPort: inHostPort,
 		repoAddr: inRepoAddr,
 	}
 	ws.SetLogLabel("phost")
 
-	var err error
+	includesPort, err := regexp.MatchString(".*:[0-9]+?$", ws.repoAddr)
+	if !includesPort && err == nil {
+		ws.repoAddr += ":" + plan.DefaultRepoServicePort
+	}
+
 	if ws.BasePath, err = plan.SetupBaseDir(inBasePath, inDoInit); err != nil {
 		return nil, err
 	}
