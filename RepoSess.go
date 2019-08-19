@@ -1,7 +1,6 @@
 package main
 
 import (
-	//"fmt"
 	//"context"
 	//"io/ioutil"
 	//"os"
@@ -10,7 +9,7 @@ import (
 	//"io"
 	//"bufio"
 	//"bytes"
-	//"fmt"
+	"fmt"
 
 	//"path"
 	//"strconv"
@@ -67,7 +66,7 @@ func NewRepoSess(
 // Startup initiates connection to the repo
 func (rs *RepoSess) Startup() error {
 
-	rs.SetLogLabel("RepoSess")
+	rs.SetLogLabel(fmt.Sprint("RepoSess ", rs.ws.MemberSeat.GenesisSeed.CommunityEpoch.CommunityID[:4]))
 
 	err := rs.CtxStart(
 		rs.ctxStartup,
