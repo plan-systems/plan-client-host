@@ -184,7 +184,7 @@ func (ws *WsHost) ctxStopping() {
 }
 
 
-
+// CreateNewSeatFromSeed takes in a MemberSeed and creates a "seat" 
 func (ws *WsHost) CreateNewSeatFromSeed(
 	inSeed *repo.MemberSeed, 
 ) (*client.MemberSeat, error) {
@@ -241,7 +241,7 @@ func (ws *WsHost) CreateNewSeatFromSeed(
 }
 
 
-
+// CreateNewSeatFromSeedFile loads the MemberSeed from the given file and calls CreateNewSeatFromSeed()
 func (ws *WsHost) CreateNewSeatFromSeedFile(
 	inPathname string,
 ) (*client.MemberSeat, error) {
@@ -336,7 +336,7 @@ type WsSession struct {
 
 }
 
-
+// StartNewWsSession reads the MemberSeat info from given path and spins up a plan.Context for the given pipe.
 func (ws *WsHost) StartNewWsSession(
 	inSeatsPath string,
 	inLogin *client.WsLogin,

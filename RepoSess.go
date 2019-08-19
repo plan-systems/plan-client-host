@@ -88,6 +88,8 @@ func (rs *RepoSess) ctxStartup() error {
         return err
     }
 
+	rs.Info(1, "opened repo session with pnode at ", rs.ws.repoAddr)
+
 	//
 	//
 	//
@@ -232,6 +234,7 @@ func (rs *RepoSess) disconnectFromRepo() {
 
 }
 
+// OpenRepoSession connects to the pnode/repo specified by the MemberSeat.  
 func (rs *RepoSess) OpenRepoSession() error {
 
 	var (
@@ -247,6 +250,8 @@ func (rs *RepoSess) OpenRepoSession() error {
 	if err != nil {
 		return err
 	}
+
+	rs.Info(1, "opening session with ", rs.ws.MemberSeat.SeatDesc())
 
 	rs.msgInlet, err = rs.repoClient.OpenMemberSession(rs.Ctx,
 		&repo.MemberSessionReq{
