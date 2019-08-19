@@ -210,7 +210,7 @@ func (rs *RepoSess) onMsgFromRepo(msg *repo.Msg) {
     }
 
     if fwdToClient {
-        rs.ws.msgsToClient <- msg
+        rs.ws.SendToClient(msg)
     }
 }
 

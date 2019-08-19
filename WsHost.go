@@ -326,7 +326,6 @@ type WsSession struct {
 	MemberSeat	  	client.MemberSeat
 
 	msgsToClient	chan *repo.Msg
-
 	entriesToCommit chan *repo.Msg
 	MemberCrypto    pdi.MemberCrypto
 	msgOutbox	   	chan *repo.Msg
@@ -472,17 +471,18 @@ func (sess *WsSession) ctxStartup() error {
 			}
 		}
 
-		sess.Info(2, "Client msg reader/receiver EXITING")
+		sess.Info(2, "client msg receiver exiting")
 	})
 	//
 	//
 	// 
 	// Client msg writer/sender
 	//
-	sess.msgsToClient = make(chan *repo.Msg, 4)
+	msgsToClient := make(chan *repo.Msg, 4)
+	sess.msgsToClient = msgsToClient
 	sess.CtxGo(func() {
-
-		for msg := range sess.msgsToClient {
+		
+		for msg := range msgsToClient {
 			err := sess.wsPipe.Send(msg)
 			if err != nil {
 				if ctxErr := sess.wsPipe.Context().Err(); ctxErr != nil {
@@ -493,7 +493,7 @@ func (sess *WsSession) ctxStartup() error {
 			}
 		}
 
-		sess.Info(2, "Client msg writer/sender EXITING")
+		sess.Info(2, "client msg sender exiting")
 	})
 
 	return nil
@@ -504,9 +504,18 @@ func (sess *WsSession) ctxStartup() error {
 func (sess *WsSession) ctxStopping() {
 
 	// With all the channel sessions stopped, we can safely close their outlet, causing a close-cascade.
+	msgsToClient := sess.msgsToClient
+	if msgsToClient != nil {
+		sess.msgsToClient = nil
+		close(msgsToClient)
+	}
+}
+
+// SendToClient queues the given msg to be sent to the end client.  
+// If this session is stopped (or is stopping), the this call has no effect.
+func (sess *WsSession) SendToClient(msg *repo.Msg) {
 	if sess.msgsToClient != nil {
-		sess.Info(2, "closing WsSession.msgsToClient")
-		close(sess.msgsToClient)
+		sess.msgsToClient <- msg
 	}
 }
 
