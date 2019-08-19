@@ -31,7 +31,7 @@ func main() {
 	init 		:= flag.Bool("init", 		false, 				"init creates <datadir> as a fresh/new pclient datastore")
 	dataDir 	:= flag.String("datadir", 	"~/_PLAN_phost", 	"datadir specifies the path for all file access and storage")
 	seed 		:= flag.String("seed", 		"", 				"seed reads a PLAN seed file ands seeds a community instance on the host pnode")
-	port    	:= flag.String("port",	    plan.DefaultWorkstationServicePort, "Sets the port used to bind the Repo service")
+	hostPort   	:= flag.String("hostPort",	plan.DefaultWorkstationServicePort, "Sets the port used to host connections from the PLAN client")
 	repoAddr 	:= flag.String("repoAddr",	localRepo, 			"host specifies the net addr of a host pnode for all connection")
 	//testRepeat  := flag.String("Trepeat",    "10",				"how often a test msg will be posted to the test channel")
 	//testCreate  := flag.String("Topen",    	"", 				"opens the given channel (vs creating a new channel)")
@@ -43,7 +43,7 @@ func main() {
 	ws, err := NewWsHost(
 		*dataDir, 
 		*init,
-		*port,
+		*hostPort,
 		*repoAddr,
 	)
 	if err != nil {
