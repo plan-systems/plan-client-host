@@ -10,4 +10,5 @@ require (
 )
 
 replace github.com/plan-systems/plan-core => ../plan-core
+
 replace github.com/plan-systems/plan-pdi-local => ../plan-pdi-local
