@@ -7,7 +7,13 @@ repo := plan-client-phost
 # ----------------------------------------
 # dev/test
 
-.PHONY: check fmt lint test
+.PHONY: check fmt lint test workspace
+
+workspace:
+	git clone https://github.com/plan-systems/plan-core.git \
+		../plan-core
+	git clone https://github.com/plan-systems/plan-pdi-local.git \
+		../plan-pdi-local
 
 check: fmt lint test
 
